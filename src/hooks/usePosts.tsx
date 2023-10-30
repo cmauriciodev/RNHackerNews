@@ -10,8 +10,22 @@ export const usePosts = () => {
         const resp = await hackerNewsApi.get<HackerNewsResponse>(
             '/search_by_date?query=mobile',
         );
-        setPostsData(resp.data.hits);
+
+        const posts = resp.data.hits.filter(
+            post =>
+                post.story_title &&
+                post.author &&
+                post.story_url &&
+                post.created_at,
+        );
+
+        setPostsData(posts);
         setisLoading(false);
+    };
+
+    const onRefresh = () => {
+        setisLoading(true);
+        loadPosts();
     };
 
     useEffect(() => {
@@ -21,5 +35,6 @@ export const usePosts = () => {
     return {
         isLoading,
         postsData,
+        onRefresh,
     };
 };

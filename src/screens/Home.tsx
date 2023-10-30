@@ -1,12 +1,10 @@
-import { FlatList, ActivityIndicator } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import React from 'react';
 import { usePosts } from '../hooks/usePosts';
 import { Card } from '../components/Card';
 
 export const Home = () => {
-    const { postsData } = usePosts();
-
-    console.log(postsData);
+    const { postsData, isLoading, onRefresh } = usePosts();
 
     return (
         <FlatList
@@ -14,7 +12,14 @@ export const Home = () => {
             data={postsData}
             keyExtractor={post => post.objectID}
             renderItem={({ item, index }) => <Card key={index} {...item} />}
-            ListHeaderComponent={<ActivityIndicator size={20} color="grey" />}
+            refreshControl={
+                <RefreshControl
+                    refreshing={isLoading}
+                    onRefresh={onRefresh}
+                    progressViewOffset={20}
+                    title="Getting posts"
+                />
+            }
         />
     );
 };
