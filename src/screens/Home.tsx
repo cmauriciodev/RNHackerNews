@@ -1,6 +1,7 @@
-import { View, Text } from 'react-native';
+import { FlatList, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { usePosts } from '../hooks/usePosts';
+import { Card } from '../components/Card';
 
 export const Home = () => {
     const { postsData } = usePosts();
@@ -8,12 +9,12 @@ export const Home = () => {
     console.log(postsData);
 
     return (
-        <View>
-            <Text>Home</Text>
-
-            {postsData?.map(post => (
-                <Text key={post.objectID}>{post.story_title}</Text>
-            ))}
-        </View>
+        <FlatList
+            showsVerticalScrollIndicator={false}
+            data={postsData}
+            keyExtractor={post => post.objectID}
+            renderItem={({ item, index }) => <Card key={index} {...item} />}
+            ListHeaderComponent={<ActivityIndicator size={20} color="grey" />}
+        />
     );
 };
