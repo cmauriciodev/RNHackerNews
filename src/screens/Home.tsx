@@ -16,7 +16,7 @@ export const Home = () => {
                 <RefreshControl
                     refreshing={isLoading}
                     onRefresh={onRefresh}
-                    progressViewOffset={20}
+                    progressViewOffset={10}
                     title="Getting posts"
                 />
             }
