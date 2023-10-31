@@ -1,11 +1,15 @@
 import { FlatList, RefreshControl } from 'react-native';
 import React from 'react';
-import { Card } from '../components/Card';
+import { ListItem } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNews } from '../hooks';
 
 export const HomeScreen = () => {
     const { news, isLoading, onRefresh } = useNews();
+
+    const onDeleteItem = (story_id: number) => {
+        console.log('Delete item with id: ', story_id);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -13,7 +17,9 @@ export const HomeScreen = () => {
                 showsVerticalScrollIndicator={false}
                 data={news}
                 keyExtractor={post => post.objectID}
-                renderItem={({ item, index }) => <Card key={index} {...item} />}
+                renderItem={({ item, index }) => (
+                    <ListItem key={index} onDelete={onDeleteItem} {...item} />
+                )}
                 refreshControl={
                     <RefreshControl
                         refreshing={isLoading}
