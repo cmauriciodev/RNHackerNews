@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { hackerNewsApi } from '../api/hackerNewsApi';
 import { HackerNewsResponse, Hit } from '../interfaces';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NEWS_STORAGE_KEY } from '../utils';
+import useAsyncStorage from './useAsyncStorage';
 
 export const useNews = () => {
     const [isLoading, setisLoading] = useState(true);
-    const [news, setNews] = useState<Hit[]>();
+    const [news, setNews] = useAsyncStorage<Hit[]>(NEWS_STORAGE_KEY, []);
 
     const loadNews = async () => {
         try {
@@ -23,23 +23,9 @@ export const useNews = () => {
             );
 
             setNews(newsData);
-            savePostsOnStorage(newsData);
             setisLoading(false);
         } catch (error) {
-            const newsData = await AsyncStorage.getItem(NEWS_STORAGE_KEY);
-            setNews(newsData ? JSON.parse(newsData) : []);
             setisLoading(false);
-        }
-    };
-
-    const savePostsOnStorage = async (newsData: Hit[]) => {
-        try {
-            await AsyncStorage.setItem(
-                NEWS_STORAGE_KEY,
-                JSON.stringify(newsData),
-            );
-        } catch (error) {
-            console.log(error);
         }
     };
 

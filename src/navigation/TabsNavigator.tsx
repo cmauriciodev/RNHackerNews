@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { NewsNavigator } from './NewsNavigator';
+import { DeletedScreen } from '../screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,11 @@ export const TabsNavigator = () => {
                     options={{ title: 'News' }}
                     name="NewsNavigator"
                     component={NewsNavigator}
+                />
+                <Tab.Screen
+                    options={{ title: 'Deleted News' }}
+                    name="DeletedScreen"
+                    component={DeletedScreen}
                 />
             </Tab.Navigator>
         </NavigationContainer>

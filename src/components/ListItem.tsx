@@ -1,35 +1,30 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    Alert,
-    PanResponder,
-    Animated,
-} from 'react-native';
-import React, { useRef } from 'react';
+import React from 'react';
+import { Text, StyleSheet, Alert, Animated } from 'react-native';
 import { Hit } from '../interfaces';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';
 import { useConnection } from '../hooks';
-import { Swipeable, RectButton } from 'react-native-gesture-handler';
+import {
+    GestureHandlerRootView,
+    Swipeable,
+} from 'react-native-gesture-handler';
 
-interface Props extends Hit {
-    onDelete: (story_id: number) => void;
+interface Props {
+    item: Hit;
+    swipeOptions: {
+        color: string;
+        text: string;
+    };
+    onSwipe: (story_id: number) => void;
 }
 
-export const ListItem = ({
-    story_title,
-    author,
-    created_at,
-    story_url,
-    story_id,
-    onDelete,
-}: Props) => {
+export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
     const { navigate } = useNavigation<StackNavigationProp<NewsStackParams>>();
     const { isConnected } = useConnection();
+
+    const { story_title, author, created_at, story_url, story_id } = item;
 
     const onNavigateToNewArticle = () => {
         if (!isConnected) {
@@ -46,7 +41,7 @@ export const ListItem = ({
         dragX: Animated.AnimatedInterpolation<string | number>,
     ) => {
         const trans = dragX.interpolate({
-            inputRange: [0, 50, 100, 101],
+            inputRange: [-20, 50, 150, 200],
             outputRange: [0, 0, 0, 1],
         });
 
@@ -55,32 +50,35 @@ export const ListItem = ({
                 style={[
                     styles.rightAction,
                     { transform: [{ translateX: trans }] },
+                    { backgroundColor: swipeOptions.color },
                 ]}>
-                <Text style={styles.actionText}>Delete</Text>
+                <Text style={styles.actionText}>{swipeOptions.text}</Text>
             </Animated.View>
         );
     };
 
     const handleSwipeableOpen = () => {
-        onDelete(story_id);
+        onSwipe(story_id);
     };
 
     return (
-        <Swipeable
-            onSwipeableOpen={handleSwipeableOpen}
-            friction={3}
-            overshootRight={false}
-            rightThreshold={90}
-            renderRightActions={renderRightAction}>
-            {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
-            <Animated.View style={styles.cardContainer}>
-                <Text style={styles.cardTitle}>{story_title}</Text>
-                <Text style={styles.cardData}>
-                    {author} - {moment(created_at).fromNow()}{' '}
-                </Text>
-            </Animated.View>
-            {/* </TouchableOpacity> */}
-        </Swipeable>
+        <GestureHandlerRootView>
+            <Swipeable
+                onSwipeableOpen={handleSwipeableOpen}
+                friction={3}
+                overshootRight={false}
+                rightThreshold={100}
+                renderRightActions={renderRightAction}>
+                {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
+                <Animated.View style={styles.cardContainer}>
+                    <Text style={styles.cardTitle}>{story_title}</Text>
+                    <Text style={styles.cardData}>
+                        {author} - {moment(created_at).fromNow()}{' '}
+                    </Text>
+                </Animated.View>
+                {/* </TouchableOpacity> */}
+            </Swipeable>
+        </GestureHandlerRootView>
     );
 };
 

@@ -1,7 +1,6 @@
-import { FlatList, RefreshControl } from 'react-native';
 import React from 'react';
+import { FlatList, RefreshControl, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNews } from '../hooks';
 
 export const HomeScreen = () => {
@@ -18,7 +17,15 @@ export const HomeScreen = () => {
                 data={news}
                 keyExtractor={post => post.objectID}
                 renderItem={({ item, index }) => (
-                    <ListItem key={index} onDelete={onDeleteItem} {...item} />
+                    <ListItem
+                        key={index}
+                        onSwipe={onDeleteItem}
+                        item={item}
+                        swipeOptions={{
+                            color: 'red',
+                            text: 'Delete',
+                        }}
+                    />
                 )}
                 refreshControl={
                     <RefreshControl
