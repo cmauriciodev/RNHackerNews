@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import React from 'react';
 import { Hit } from '../interfaces';
 import moment from 'moment';
@@ -6,13 +6,24 @@ import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';
+import { useConnection } from '../hooks';
 
 interface Props extends Hit { }
 
 export const Card = ({ story_title, author, created_at, story_url }: Props) => {
     const { navigate } = useNavigation<StackNavigationProp<NewsStackParams>>();
+    const { isConnected } = useConnection();
 
     const onNavigateToNewArticle = () => {
+        console.log(isConnected);
+
+        if (!isConnected) {
+            Alert.alert(
+                'No internet connection',
+                'Cannot open article without internet connection',
+            );
+            return;
+        }
         navigate('ArticleScreen', { url: story_url, story_title });
     };
 

@@ -6,14 +6,15 @@ export const useConnection = () => {
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
-            console.log(state.isConnected);
+            console.log('state', state);
 
-            if (state.isConnected === true) {
-                setIsConnected(true);
-            } else {
-                setIsConnected(false);
-            }
+            setIsConnected(state.isConnected || false);
         });
+
+        NetInfo.fetch().then(state => {
+            setIsConnected(state.isConnected || false);
+        });
+
         return () => {
             unsubscribe();
         };
