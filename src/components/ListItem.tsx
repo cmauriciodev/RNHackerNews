@@ -68,8 +68,9 @@ export const ListItem = ({
     return (
         <Swipeable
             onSwipeableOpen={handleSwipeableOpen}
-            friction={2}
-            rightThreshold={80}
+            friction={3}
+            overshootRight={false}
+            rightThreshold={90}
             renderRightActions={renderRightAction}>
             {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
             <Animated.View style={styles.cardContainer}>
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
         justifyContent: 'center',
         alignItems: 'flex-end',
-        padding: 15,
+        padding: 20,
         height: '100%',
     },
     actionText: {
