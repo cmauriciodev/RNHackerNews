@@ -1,19 +1,19 @@
 import { FlatList, RefreshControl } from 'react-native';
 import React from 'react';
-import { usePosts } from '../hooks/usePosts';
 import { Card } from '../components/Card';
 import { useConnection } from '../hooks/useConnection';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNews } from '../hooks';
 
-export const Home = () => {
-    const { postsData, isLoading, onRefresh } = usePosts();
+export const HomeScreen = () => {
+    const { news, isLoading, onRefresh } = useNews();
     const { isConnected } = useConnection();
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                data={postsData}
+                data={news}
                 keyExtractor={post => post.objectID}
                 renderItem={({ item, index }) => <Card key={index} {...item} />}
                 refreshControl={

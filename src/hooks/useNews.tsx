@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import { hackerNewsApi } from '../api/hackerNewsApi';
 import { HackerNewsResponse, Hit } from '../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { POSTS_STORAGE_KEY } from '../utils';
+import { NEWS_STORAGE_KEY } from '../utils';
 
-export const usePosts = () => {
+export const useNews = () => {
     const [isLoading, setisLoading] = useState(true);
-    const [postsData, setPostsData] = useState<Hit[]>();
+    const [news, setNews] = useState<Hit[]>();
 
-    const loadPosts = async () => {
+    const loadNews = async () => {
         try {
             const resp = await hackerNewsApi.get<HackerNewsResponse>(
                 '/search_by_date?query=mobile',
             );
 
-            const posts = resp.data.hits.filter(
+            const newsData = resp.data.hits.filter(
                 post =>
                     post.story_title &&
                     post.author &&
@@ -22,21 +22,21 @@ export const usePosts = () => {
                     post.created_at,
             );
 
-            setPostsData(posts);
-            savePostsOnStorage(posts);
+            setNews(newsData);
+            savePostsOnStorage(newsData);
             setisLoading(false);
         } catch (error) {
-            const posts = await AsyncStorage.getItem(POSTS_STORAGE_KEY);
-            setPostsData(posts ? JSON.parse(posts) : []);
+            const newsData = await AsyncStorage.getItem(NEWS_STORAGE_KEY);
+            setNews(newsData ? JSON.parse(newsData) : []);
             setisLoading(false);
         }
     };
 
-    const savePostsOnStorage = async (posts: Hit[]) => {
+    const savePostsOnStorage = async (newsData: Hit[]) => {
         try {
             await AsyncStorage.setItem(
-                POSTS_STORAGE_KEY,
-                JSON.stringify(posts),
+                NEWS_STORAGE_KEY,
+                JSON.stringify(newsData),
             );
         } catch (error) {
             console.log(error);
@@ -45,16 +45,16 @@ export const usePosts = () => {
 
     const onRefresh = () => {
         setisLoading(true);
-        loadPosts();
+        loadNews();
     };
 
     useEffect(() => {
-        loadPosts();
+        loadNews();
     }, []);
 
     return {
         isLoading,
-        postsData,
+        news,
         onRefresh,
     };
 };

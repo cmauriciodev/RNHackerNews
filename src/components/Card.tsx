@@ -2,17 +2,29 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { Hit } from '../interfaces';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { NewsStackParams } from '../navigation/NewsNavigator';
 
 interface Props extends Hit { }
 
-export const Card = ({ story_title, author, created_at }: Props) => {
+export const Card = ({ story_title, author, created_at, story_url }: Props) => {
+    const { navigate } = useNavigation<StackNavigationProp<NewsStackParams>>();
+
+    const onNavigateToNewArticle = () => {
+        navigate('ArticleScreen', { url: story_url, story_title });
+    };
+
     return (
-        <View style={styles.cardContainer}>
-            <Text style={styles.cardTitle}>{story_title}</Text>
-            <Text style={styles.cardData}>
-                {author} - {moment(created_at).fromNow()}{' '}
-            </Text>
-        </View>
+        <TouchableOpacity onPress={onNavigateToNewArticle}>
+            <View style={styles.cardContainer}>
+                <Text style={styles.cardTitle}>{story_title}</Text>
+                <Text style={styles.cardData}>
+                    {author} - {moment(created_at).fromNow()}{' '}
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
 };
 

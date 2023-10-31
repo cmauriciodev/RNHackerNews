@@ -1,1 +1,1 @@
-export const POSTS_STORAGE_KEY = 'posts_storage';
+export const NEWS_STORAGE_KEY = 'news_storage';

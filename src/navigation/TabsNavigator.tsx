@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home } from '../screens';
 import { NavigationContainer } from '@react-navigation/native';
+import { NewsNavigator } from './NewsNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,7 +12,11 @@ export const TabsNavigator = () => {
                 screenOptions={{
                     headerShown: false,
                 }}>
-                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen
+                    options={{ title: 'News' }}
+                    name="NewsNavigator"
+                    component={NewsNavigator}
+                />
             </Tab.Navigator>
         </NavigationContainer>
     );
