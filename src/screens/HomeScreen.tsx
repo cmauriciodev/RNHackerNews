@@ -4,10 +4,10 @@ import { ListItem } from '../components';
 import { useNews } from '../hooks';
 
 export const HomeScreen = () => {
-    const { news, isLoading, onRefresh } = useNews();
+    const { news, isLoading, onRefresh, addNewToDeletedNews } = useNews();
 
     const onDeleteItem = (story_id: number) => {
-        console.log('Delete item with id: ', story_id);
+        addNewToDeletedNews(story_id);
     };
 
     return (

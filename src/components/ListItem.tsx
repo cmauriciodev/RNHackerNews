@@ -6,10 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';
 import { useConnection } from '../hooks';
-import {
-    GestureHandlerRootView,
-    Swipeable,
-} from 'react-native-gesture-handler';
+import { Swipeable } from 'react-native-gesture-handler';
 
 interface Props {
     item: Hit;
@@ -62,23 +59,21 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
     };
 
     return (
-        <GestureHandlerRootView>
-            <Swipeable
-                onSwipeableOpen={handleSwipeableOpen}
-                friction={3}
-                overshootRight={false}
-                rightThreshold={100}
-                renderRightActions={renderRightAction}>
-                {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
-                <Animated.View style={styles.cardContainer}>
-                    <Text style={styles.cardTitle}>{story_title}</Text>
-                    <Text style={styles.cardData}>
-                        {author} - {moment(created_at).fromNow()}{' '}
-                    </Text>
-                </Animated.View>
-                {/* </TouchableOpacity> */}
-            </Swipeable>
-        </GestureHandlerRootView>
+        <Swipeable
+            onSwipeableOpen={handleSwipeableOpen}
+            friction={3}
+            overshootRight={false}
+            rightThreshold={100}
+            renderRightActions={renderRightAction}>
+            {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
+            <Animated.View style={styles.cardContainer}>
+                <Text style={styles.cardTitle}>{story_title}</Text>
+                <Text style={styles.cardData}>
+                    {author} - {moment(created_at).fromNow()}{' '}
+                </Text>
+            </Animated.View>
+            {/* </TouchableOpacity> */}
+        </Swipeable>
     );
 };
 

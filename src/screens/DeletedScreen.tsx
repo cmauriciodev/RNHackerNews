@@ -1,10 +1,12 @@
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useDeletedNews } from '../hooks';
+import { useNews } from '../hooks';
 
 export const DeletedScreen = () => {
-    const { deletedNews } = useDeletedNews();
+    const { deletedNews } = useNews();
+
+    console.log(deletedNews.length);
 
     const onRemoveFromDeleted = (story_id: number) => {
         console.log('Remove item with id: ', story_id);

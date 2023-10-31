@@ -8,19 +8,19 @@ const useAsyncStorage = <T,>(
     const [storedValue, setStoredValue] = useState<T>(initialValue);
 
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const value = await AsyncStorage.getItem(key);
-                value !== null
-                    ? setStoredValue(JSON.parse(value) as T)
-                    : initialValue;
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
         getData();
-    }, [key, initialValue]);
+    }, []);
+
+    const getData = async () => {
+        try {
+            const value = await AsyncStorage.getItem(key);
+            value !== null
+                ? setStoredValue(JSON.parse(value) as T)
+                : initialValue;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const setData = async (value: T) => {
         try {
