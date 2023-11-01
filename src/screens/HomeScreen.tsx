@@ -4,8 +4,7 @@ import { ListItem } from '../components';
 import { useNewsContext } from '../context/NewsContext';
 
 export const HomeScreen = () => {
-    const { news, onRefresh, isLoading, addNewToDeletedNews } =
-        useNewsContext();
+    const { news, loadNews, isLoading, addNewToDeletedNews } = useNewsContext();
 
     const onDeleteItem = (story_id: number) => {
         addNewToDeletedNews(story_id);
@@ -31,7 +30,7 @@ export const HomeScreen = () => {
                 refreshControl={
                     <RefreshControl
                         refreshing={isLoading}
-                        onRefresh={onRefresh}
+                        onRefresh={loadNews}
                         progressViewOffset={10}
                         title="Getting posts..."
                     />

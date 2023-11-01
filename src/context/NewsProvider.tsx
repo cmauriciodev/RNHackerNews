@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { NewsContext } from './NewsContext';
 import { HackerNewsResponse, Hit } from '../interfaces';
 import { hackerNewsApi } from '../api/hackerNewsApi';
-import { DELETED_NEWS_STORAGE_KEY, NEWS_STORAGE_KEY } from '../utils';
-import { useAsyncStorage } from '../hooks';
+// import { DELETED_NEWS_STORAGE_KEY, NEWS_STORAGE_KEY } from '../utils';
+// import { useAsyncStorage } from '../hooks';
 
 export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
-    const [news, setNews] = useAsyncStorage<Hit[]>(NEWS_STORAGE_KEY, []);
-    const [deletedNews, setDeletedNews] = useAsyncStorage<Hit[]>(
-        DELETED_NEWS_STORAGE_KEY,
-        [],
-    );
+    const [news, setNews] = useState<Hit[]>([]);
+    const [deletedNews, setDeletedNews] = useState<Hit[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const loadNews = async () => {
@@ -20,28 +17,15 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
                 '/search_by_date?query=mobile',
             );
 
-            const newsData = resp.data.hits
-                .filter(
-                    post =>
-                        post.story_title &&
-                        post.author &&
-                        post.story_url &&
-                        post.created_at,
-                )
-                .filter(
-                    post =>
-                        !deletedNews.find(
-                            deleted => deleted.story_id === post.story_id,
-                        ),
-                );
+            const responseData = resp.data.hits.filter(
+                post =>
+                    post.story_title &&
+                    post.author &&
+                    post.story_url &&
+                    post.created_at,
+            );
 
-            console.log(resp.data.hits.map(deleted => deleted.story_id));
-
-            console.log(deletedNews.map(deleted => deleted.story_id));
-
-            console.log(newsData.map(deleted => deleted.story_id));
-
-            // setNews(newsData);
+            setNews(responseData);
         } catch (error) {
             console.error(error);
         } finally {
@@ -62,12 +46,6 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
             post => post.story_id !== story_id,
         );
         setDeletedNews(filteredDeletedNews);
-
-        loadNews(); //TODO: Improve this to avoid calling the API again
-    };
-
-    const onRefresh = () => {
-        loadNews();
     };
 
     useEffect(() => {
@@ -83,7 +61,6 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
                 loadNews,
                 addNewToDeletedNews,
                 removeNewFromDeletedNews,
-                onRefresh,
             }}>
             {children}
         </NewsContext.Provider>
