@@ -18,7 +18,7 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
         if (!newsLoading && !deletedNewsLoading) {
             loadNews();
         }
-    }, [deletedNews]);
+    }, []);
 
     const loadNews = async () => {
         try {
@@ -62,6 +62,23 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         await setDeletedNews(filteredDeletedNews);
+
+        const restoredNew = deletedNews.find(
+            post => post.objectID === objectID,
+        );
+
+        if (!restoredNew) {
+            return;
+        }
+
+        const updatedNews = [...news, restoredNew];
+        updatedNews.sort(
+            (a, b) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime(),
+        );
+
+        await setNews(updatedNews);
     };
 
     return (
