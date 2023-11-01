@@ -8,6 +8,6 @@ export interface NewsState {
 
 export interface NewsContextProps extends NewsState {
     loadNews: () => void;
-    addNewToDeletedNews: (story_id: number) => void;
-    removeNewFromDeletedNews: (story_id: number) => void;
+    addNewToDeletedNews: (objectID: string) => void;
+    restoreDeletedNews: (objectID: string) => void;
 }

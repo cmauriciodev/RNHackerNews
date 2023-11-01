@@ -4,11 +4,7 @@ import { ListItem } from '../components';
 import { useNewsContext } from '../context/NewsContext';
 
 export const DeletedScreen = () => {
-    const { deletedNews, removeNewFromDeletedNews } = useNewsContext();
-
-    const onRemoveFromDeleted = (story_id: number) => {
-        removeNewFromDeletedNews(story_id);
-    };
+    const { deletedNews, restoreDeletedNews } = useNewsContext();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -19,7 +15,7 @@ export const DeletedScreen = () => {
                 renderItem={({ item, index }) => (
                     <ListItem
                         key={index}
-                        onSwipe={onRemoveFromDeleted}
+                        onSwipe={restoreDeletedNews}
                         item={item}
                         swipeOptions={{
                             color: 'green',

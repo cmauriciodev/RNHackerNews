@@ -14,14 +14,14 @@ interface Props {
         color: string;
         text: string;
     };
-    onSwipe: (story_id: number) => void;
+    onSwipe: (objectID: string) => void;
 }
 
 export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
     const { navigate } = useNavigation<StackNavigationProp<NewsStackParams>>();
     const { isConnected } = useConnection();
 
-    const { story_title, author, created_at, story_url, story_id } = item;
+    const { story_title, author, created_at, story_url, objectID } = item;
 
     const onNavigateToNewArticle = () => {
         if (!isConnected) {
@@ -55,7 +55,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
     };
 
     const handleSwipeableOpen = () => {
-        onSwipe(story_id);
+        onSwipe(objectID);
     };
 
     return (
@@ -67,6 +67,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
             renderRightActions={renderRightAction}>
             {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
             <Animated.View style={styles.cardContainer}>
+                <Text>{objectID}</Text>
                 <Text style={styles.cardTitle}>{story_title}</Text>
                 <Text style={styles.cardData}>
                     {author} - {moment(created_at).fromNow()}{' '}

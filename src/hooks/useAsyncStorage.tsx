@@ -1,44 +1,36 @@
-import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
-export const useAsyncStorage = (key, initialValue) => {
+export const useAsyncStorage = <T,>(
+    key: string,
+    initialValue: T,
+): [T, (value: T) => Promise<void>, isLoading: boolean] => {
     const [storedValue, setStoredValue] = useState(initialValue);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Load from storage
     useEffect(() => {
-        (async () => {
+        const getStoredValue = async () => {
             try {
-                const value = await AsyncStorage.getItem(key);
-                value !== null
-                    ? setStoredValue(JSON.parse(value))
-                    : initialValue;
+                const item = (await AsyncStorage.getItem(key)) || '';
+                setStoredValue(JSON.parse(item));
+                setIsLoading(false);
             } catch (error) {
                 console.error(error);
+                setIsLoading(false);
             }
-        })();
-    }, [key, initialValue]);
+        };
 
-    // Save to storage
-    const setValue = async value => {
+        getStoredValue();
+    }, [key]);
+
+    const setValue = async (value: T) => {
         try {
-            const valueToStore =
-                value instanceof Function ? value(storedValue) : value;
-            setStoredValue(valueToStore);
-            await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
+            setStoredValue(value);
+            await AsyncStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
             console.error(error);
         }
     };
 
-    // Remove from storage
-    const removeValue = async () => {
-        try {
-            await AsyncStorage.removeItem(key);
-            setStoredValue(null);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    return [storedValue, setValue, removeValue];
+    return [storedValue, setValue, isLoading];
 };
