@@ -1,15 +1,13 @@
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useNews } from '../hooks';
+import { useNewsContext } from '../context/NewsContext';
 
 export const DeletedScreen = () => {
-    const { deletedNews } = useNews();
-
-    console.log(deletedNews.length);
+    const { deletedNews, removeNewFromDeletedNews } = useNewsContext();
 
     const onRemoveFromDeleted = (story_id: number) => {
-        console.log('Remove item with id: ', story_id);
+        removeNewFromDeletedNews(story_id);
     };
 
     return (

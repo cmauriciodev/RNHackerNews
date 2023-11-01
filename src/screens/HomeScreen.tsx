@@ -1,10 +1,11 @@
 import React from 'react';
 import { FlatList, RefreshControl, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useNews } from '../hooks';
+import { useNewsContext } from '../context/NewsContext';
 
 export const HomeScreen = () => {
-    const { news, isLoading, onRefresh, addNewToDeletedNews } = useNews();
+    const { news, onRefresh, isLoading, addNewToDeletedNews } =
+        useNewsContext();
 
     const onDeleteItem = (story_id: number) => {
         addNewToDeletedNews(story_id);

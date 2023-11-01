@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const useAsyncStorage = <T,>(
+export const useAsyncStorage = <T,>(
     key: string,
     initialValue: T,
 ): [T, (value: T) => Promise<void>] => {
@@ -35,5 +35,3 @@ const useAsyncStorage = <T,>(
 
     return [storedValue, setData];
 };
-
-export default useAsyncStorage;
