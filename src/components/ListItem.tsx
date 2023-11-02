@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, Alert, Animated } from 'react-native';
+import { Text, StyleSheet, Alert, Animated, Pressable } from 'react-native';
 import { Hit } from '../interfaces';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -65,15 +65,15 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
             overshootRight={false}
             rightThreshold={100}
             renderRightActions={renderRightAction}>
-            {/* <TouchableOpacity onPress={onNavigateToNewArticle}> */}
-            <Animated.View style={styles.cardContainer}>
-                <Text>{objectID}</Text>
-                <Text style={styles.cardTitle}>{story_title}</Text>
-                <Text style={styles.cardData}>
-                    {author} - {moment(created_at).fromNow()}{' '}
-                </Text>
-            </Animated.View>
-            {/* </TouchableOpacity> */}
+            <Pressable onPress={onNavigateToNewArticle}>
+                <Animated.View style={styles.cardContainer}>
+                    <Text style={styles.cardData}>{objectID}</Text>
+                    <Text style={styles.cardTitle}>{story_title}</Text>
+                    <Text style={styles.cardData}>
+                        {author} - {moment(created_at).fromNow()}{' '}
+                    </Text>
+                </Animated.View>
+            </Pressable>
         </Swipeable>
     );
 };

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { NewsContext } from './NewsContext';
 import { HackerNewsResponse, Hit } from '../interfaces';
 import { hackerNewsApi } from '../api/hackerNewsApi';
 import { DELETED_NEWS_STORAGE_KEY, NEWS_STORAGE_KEY } from '../utils';
 import { useAsyncStorage } from '../hooks';
+import { Alert } from 'react-native';
 
 export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
     const [news, setNews, newsLoading] = useAsyncStorage<Hit[]>(
@@ -44,6 +45,10 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
 
             await setNews(responseData);
         } catch (error) {
+            Alert.alert(
+                'No internet connection',
+                'Cannot update articles without internet connection',
+            );
             console.error(error);
         }
     };

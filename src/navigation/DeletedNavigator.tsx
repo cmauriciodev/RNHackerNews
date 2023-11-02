@@ -1,9 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { DeletedScreen } from '../screens';
+import { ArticleScreen, DeletedScreen } from '../screens';
 
 export type DeletedStackParams = {
     DeletedScreen: undefined;
+    ArticleScreen: { url: string; story_title: string };
 };
 
 const Stack = createStackNavigator<DeletedStackParams>();
@@ -17,6 +18,14 @@ export const DeletedNavigator = () => {
                 }}
                 name="DeletedScreen"
                 component={DeletedScreen}
+            />
+            <Stack.Screen
+                options={{
+                    headerBackTitle: 'Back',
+                    title: '',
+                }}
+                name="ArticleScreen"
+                component={ArticleScreen}
             />
         </Stack.Navigator>
     );
