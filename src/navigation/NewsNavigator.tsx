@@ -4,7 +4,7 @@ import { ArticleScreen, HomeScreen } from '../screens';
 
 export type NewsStackParams = {
     HomeScreen: undefined;
-    ArticleScreen: { url: string; story_title: string };
+    ArticleScreen: { url: string; storyTitle: string };
 };
 
 const Stack = createStackNavigator<NewsStackParams>();

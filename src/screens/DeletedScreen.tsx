@@ -1,10 +1,19 @@
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useNewsContext } from '../context/NewsContext';
+import { useDeletedNewsViewModel } from '../hooks';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const DeletedScreen = () => {
-    const { deletedNews, restoreDeletedNews } = useNewsContext();
+    const { deletedNews, loadDeletedNews, isLoading, restoreNews } =
+        useDeletedNewsViewModel();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            loadDeletedNews();
+        }, []),
+    );
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -15,7 +24,7 @@ export const DeletedScreen = () => {
                 renderItem={({ item, index }) => (
                     <ListItem
                         key={index}
-                        onSwipe={restoreDeletedNews}
+                        onSwipe={restoreNews}
                         item={item}
                         swipeOptions={{
                             color: 'green',
@@ -23,6 +32,14 @@ export const DeletedScreen = () => {
                         }}
                     />
                 )}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isLoading}
+                        onRefresh={loadDeletedNews}
+                        progressViewOffset={10}
+                        title="Getting posts..."
+                    />
+                }
             />
         </SafeAreaView>
     );

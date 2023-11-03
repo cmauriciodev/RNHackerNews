@@ -1,2 +1,3 @@
 export * from './useConnection';
-export * from './useAsyncStorage';
+export * from './useNewsViewModel';
+export * from './useDeletedNewsViewModel';

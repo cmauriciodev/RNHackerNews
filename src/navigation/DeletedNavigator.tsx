@@ -4,7 +4,7 @@ import { ArticleScreen, DeletedScreen } from '../screens';
 
 export type DeletedStackParams = {
     DeletedScreen: undefined;
-    ArticleScreen: { url: string; story_title: string };
+    ArticleScreen: { url: string; storyTitle: string };
 };
 
 const Stack = createStackNavigator<DeletedStackParams>();

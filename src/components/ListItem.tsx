@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, Alert, Animated, Pressable } from 'react-native';
-import { Hit } from '../interfaces';
-import moment from 'moment';
+import { INews } from '../interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';
@@ -9,7 +8,7 @@ import { useConnection } from '../hooks';
 import { Swipeable } from 'react-native-gesture-handler';
 
 interface Props {
-    item: Hit;
+    item: INews;
     swipeOptions: {
         color: string;
         text: string;
@@ -21,7 +20,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
     const { navigate } = useNavigation<StackNavigationProp<NewsStackParams>>();
     const { isConnected } = useConnection();
 
-    const { story_title, author, created_at, story_url, objectID } = item;
+    const { storyTitle, author, createdAt, storyUrl, objectID } = item;
 
     const onNavigateToNewArticle = () => {
         if (!isConnected) {
@@ -31,7 +30,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
             );
             return;
         }
-        navigate('ArticleScreen', { url: story_url, story_title });
+        navigate('ArticleScreen', { url: storyUrl, storyTitle });
     };
 
     const renderRightAction = (
@@ -68,9 +67,9 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
             <Pressable onPress={onNavigateToNewArticle}>
                 <Animated.View style={styles.cardContainer}>
                     <Text style={styles.cardData}>{objectID}</Text>
-                    <Text style={styles.cardTitle}>{story_title}</Text>
+                    <Text style={styles.cardTitle}>{storyTitle}</Text>
                     <Text style={styles.cardData}>
-                        {author} - {moment(created_at).fromNow()}{' '}
+                        {author} - {createdAt}
                     </Text>
                 </Animated.View>
             </Pressable>

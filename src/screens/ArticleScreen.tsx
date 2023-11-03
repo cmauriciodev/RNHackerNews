@@ -7,13 +7,13 @@ import { StackScreenProps } from '@react-navigation/stack';
 interface Props extends StackScreenProps<NewsStackParams, 'ArticleScreen'> { }
 
 export const ArticleScreen = ({ route, navigation }: Props) => {
-    const { url, story_title } = route.params;
+    const { url, storyTitle } = route.params;
 
     useEffect(() => {
         navigation.setOptions({
-            title: story_title || '',
+            title: storyTitle || '',
         });
-    }, [story_title]);
+    }, [navigation, storyTitle]);
 
     return (
         <View style={styles.container}>
