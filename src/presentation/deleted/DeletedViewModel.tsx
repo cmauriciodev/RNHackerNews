@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { NewsRepository } from '../repositories/NewsRepository';
-import { INews } from '../model/interfaces';
+import { useState } from 'react';
+import { INews } from '../../model/interfaces';
+import { NewsRepository } from '../../data/news';
 
 export const useDeletedNewsViewModel = () => {
     const newsRepository = new NewsRepository();
@@ -25,10 +25,6 @@ export const useDeletedNewsViewModel = () => {
         );
         setDeletedNews(filteredNews);
     };
-
-    useEffect(() => {
-        loadDeletedNews();
-    }, []);
 
     return { deletedNews, loadDeletedNews, restoreNews, isLoading };
 };

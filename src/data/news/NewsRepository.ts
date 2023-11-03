@@ -1,11 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { hackerNewsApi } from '../../api/hackerNewsApi';
 import { HackerNewsResponse, INews } from '../../model/interfaces';
-import { INewsRepository } from './news-repository.interface';
 import {
     DELETED_NEWS_STORAGE_KEY,
     NEWS_STORAGE_KEY,
 } from '../../model/constants';
+
+export interface INewsRepository {
+    getNews(): Promise<INews[]>;
+    getDeletedNews(): Promise<INews[]>;
+    deleteNews(news: INews): Promise<void>;
+    restoreNews(news: INews): Promise<void>;
+}
 
 export class NewsRepository implements INewsRepository {
     /**

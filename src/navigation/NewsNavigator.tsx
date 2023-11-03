@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ArticleScreen, HomeScreen } from '../screens';
+import { HomeScreen } from '../presentation/home';
+import { ArticleScreen } from '../presentation/article';
 
 export type NewsStackParams = {
     HomeScreen: undefined;

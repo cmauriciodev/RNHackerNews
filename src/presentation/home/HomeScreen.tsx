@@ -1,41 +1,51 @@
 import React from 'react';
-import { FlatList, SafeAreaView } from 'react-native';
-import { ListItem } from '../components';
-import { RefreshControl } from 'react-native-gesture-handler';
+import { Alert, FlatList, RefreshControl, SafeAreaView } from 'react-native';
+import { ListItem } from '../../components';
+import { useConnection } from '../../hooks';
 import { useFocusEffect } from '@react-navigation/native';
-import { useDeletedNewsViewModel } from '../ViewModels';
+import { useNewsViewModel } from './HomeViewModel';
 
-export const DeletedScreen = () => {
-    const { deletedNews, loadDeletedNews, isLoading, restoreNews } =
-        useDeletedNewsViewModel();
+export const HomeScreen = () => {
+    const { news, loadNews, isLoading, deleteNews } = useNewsViewModel();
+    const { isConnected } = useConnection();
 
     useFocusEffect(
         React.useCallback(() => {
-            loadDeletedNews();
+            loadNews();
         }, []),
     );
+
+    const onRefresh = () => {
+        if (!isConnected) {
+            Alert.alert(
+                'No internet connection',
+                'Cannot update news without internet connection',
+            );
+        }
+        loadNews();
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                data={deletedNews}
+                data={news}
                 keyExtractor={post => post.objectID}
                 renderItem={({ item, index }) => (
                     <ListItem
                         key={index}
-                        onSwipe={restoreNews}
+                        onSwipe={deleteNews}
                         item={item}
                         swipeOptions={{
-                            color: 'green',
-                            text: 'Restore',
+                            color: 'red',
+                            text: 'Delete',
                         }}
                     />
                 )}
                 refreshControl={
                     <RefreshControl
                         refreshing={isLoading}
-                        onRefresh={loadDeletedNews}
+                        onRefresh={onRefresh}
                         progressViewOffset={10}
                         title="Getting posts..."
                     />

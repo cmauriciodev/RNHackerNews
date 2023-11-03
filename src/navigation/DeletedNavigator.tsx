@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ArticleScreen, DeletedScreen } from '../screens';
+import { DeletedScreen } from '../presentation/deleted';
+import { ArticleScreen } from '../presentation/article';
 
 export type DeletedStackParams = {
     DeletedScreen: undefined;

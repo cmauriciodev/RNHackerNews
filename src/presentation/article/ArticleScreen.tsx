@@ -1,8 +1,8 @@
 import { View, StyleSheet } from 'react-native';
 import React, { useEffect } from 'react';
 import WebView from 'react-native-webview';
-import { NewsStackParams } from '../navigation/NewsNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
+import { NewsStackParams } from '../../navigation/NewsNavigator';
 
 interface Props extends StackScreenProps<NewsStackParams, 'ArticleScreen'> { }
 
