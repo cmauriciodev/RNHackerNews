@@ -1,10 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { hackerNewsApi } from '../../api/hackerNewsApi';
-import { HackerNewsResponse, INews } from '../../model/interfaces';
+import { INews } from '../../model/interfaces';
+import { DELETED_NEWS_STORAGE_KEY } from '../../model/constants';
 import {
-    DELETED_NEWS_STORAGE_KEY,
-    NEWS_STORAGE_KEY,
-} from '../../model/constants';
+    INewsRemoteDataSource,
+    NewsRemoteDataSource,
+} from './remote/NewsRemoteDataSource';
+import {
+    INewsLocalDataSource,
+    NewsLocalDataSource,
+} from './local/NewsLocalDataSource';
 
 export interface INewsRepository {
     getNews(): Promise<INews[]>;
@@ -14,72 +18,67 @@ export interface INewsRepository {
 }
 
 export class NewsRepository implements INewsRepository {
-    /**
-     * Fetches news from the API and returns an array of filtered and mapped news objects.
-     * If the API call fails, it returns an array of news from async storage.
-     * @returns {Promise<INews[]>} An array of news objects.
-     */
-    async getNews(): Promise<INews[]> {
-        try {
-            const resp = await hackerNewsApi.get<HackerNewsResponse>(
-                '/search_by_date?query=mobile',
-            );
+    private remote: INewsRemoteDataSource;
+    private local: INewsLocalDataSource;
 
-            const deletedNews = await this.getDeletedNews();
-
-            const responseData = resp.data.hits
-                .filter(
-                    post =>
-                        post.story_title &&
-                        post.author &&
-                        post.story_url &&
-                        post.created_at,
-                )
-                .filter(
-                    post =>
-                        !deletedNews.find(
-                            deletedPost =>
-                                deletedPost.objectID === post.objectID,
-                        ),
-                )
-                .map(post => {
-                    return {
-                        storyTitle: post.story_title,
-                        author: post.author,
-                        storyUrl: post.story_url,
-                        createdAt: post.created_at,
-                        objectID: post.objectID,
-                    };
-                });
-
-            await AsyncStorage.setItem(
-                NEWS_STORAGE_KEY,
-                JSON.stringify(responseData),
-            );
-
-            return responseData;
-        } catch (error) {
-            const data = await AsyncStorage.getItem(NEWS_STORAGE_KEY);
-            const deletedNews = await this.getDeletedNews();
-            const filteredNews = JSON.parse(data || '[]').filter(
-                (news: INews) =>
-                    !deletedNews.find(
-                        deletedNewsItem =>
-                            deletedNewsItem.objectID === news.objectID,
-                    ),
-            );
-
-            return filteredNews;
-        }
+    constructor() {
+        this.remote = new NewsRemoteDataSource();
+        this.local = new NewsLocalDataSource();
     }
 
     /**
-     * Retrieves deleted news from AsyncStorage.
+     * Retrieves news from the remote API and saves it locally.
+     * If there's an error retrieving the news from the remote API, it retrieves the news from the local.
+     * Filters out deleted news and saves the filtered news on the local.
+     * @returns A Promise that resolves to an array of INews objects.
+     */
+    async getNews(): Promise<INews[]> {
+        let newsData: INews[] = [];
+
+        try {
+            newsData = (await this.remote.getNews()).hits.map(hit => {
+                return {
+                    storyTitle: hit.story_title,
+                    author: hit.author,
+                    storyUrl: hit.story_url,
+                    createdAt: hit.created_at,
+                    objectID: hit.objectID,
+                };
+            });
+        } catch (error) {
+            newsData = await this.local.getNews();
+        }
+
+        const deletedNews = await this.local.getDeletedNews();
+
+        const filteredNews = newsData
+            .filter(
+                post =>
+                    post.storyTitle &&
+                    post.author &&
+                    post.storyUrl &&
+                    post.createdAt,
+            )
+            .filter(
+                post =>
+                    !deletedNews.find(
+                        deletedPost => deletedPost.objectID === post.objectID,
+                    ),
+            );
+
+        await this.local.saveNewsOnStorage(filteredNews);
+
+        return filteredNews;
+    }
+
+    /**
+     * Retrieves deleted news from local and sorts them by creation date in descending order.
      * @returns {Promise<INews[]>} A promise that resolves to an array of INews objects representing the deleted news.
      */
     async getDeletedNews(): Promise<INews[]> {
-        const data = await AsyncStorage.getItem(DELETED_NEWS_STORAGE_KEY);
-        const sortedData: INews[] = JSON.parse(data || '[]').sort(
+        const data = await this.local.getDeletedNews();
+
+        const sortedData: INews[] = data.sort(
             (a: INews, b: INews) =>
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime(),
@@ -89,32 +88,26 @@ export class NewsRepository implements INewsRepository {
     }
 
     /**
-     * Add news to the deletedNews Storage.
-     * @param news The news item to be deleted.
-     * @returns A Promise that resolves when the news item has been deleted.
+     * Deletes a news item from the local.
+     * @param newsItem - The news item to be deleted.
+     * @returns A Promise that resolves when the news item is deleted.
      */
-    async deleteNews(news: INews): Promise<void> {
-        const deletedNews = await this.getDeletedNews();
-        deletedNews.push(news);
-        await AsyncStorage.setItem(
-            DELETED_NEWS_STORAGE_KEY,
-            JSON.stringify(deletedNews),
-        );
+    async deleteNews(newsItem: INews): Promise<void> {
+        const deletedNews = await this.local.getDeletedNews();
+        deletedNews.push(newsItem);
+        await this.local.saveDeletedNewsOnStorage(deletedNews);
     }
 
     /**
-     * Restores a deleted news item by removing it from the list of deleted news items stored in AsyncStorage.
-     * @param news - The news item to restore.
+     * Restores a deleted news item by removing it from the list of deleted news items.
+     * @param newsItem - The news item to be restored.
      * @returns A Promise that resolves when the news item has been successfully restored.
      */
-    async restoreNews(news: INews): Promise<void> {
+    async restoreNews(newsItem: INews): Promise<void> {
         const deletedNews = await this.getDeletedNews();
         const filteredNews = deletedNews.filter(
-            deletedNewsItem => deletedNewsItem.objectID !== news.objectID,
+            deletedNewsItem => deletedNewsItem.objectID !== newsItem.objectID,
         );
-        await AsyncStorage.setItem(
-            DELETED_NEWS_STORAGE_KEY,
-            JSON.stringify(filteredNews),
-        );
+        await this.local.saveDeletedNewsOnStorage(filteredNews);
     }
 }

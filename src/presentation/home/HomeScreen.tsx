@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, FlatList, RefreshControl, SafeAreaView } from 'react-native';
-import { ListItem } from '../../components';
+import { ListItem } from '../_components';
 import { useConnection } from '../../hooks';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNewsViewModel } from './HomeViewModel';

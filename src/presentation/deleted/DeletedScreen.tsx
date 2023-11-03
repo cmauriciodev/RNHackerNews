@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
-import { ListItem } from '../../components';
+import { ListItem } from '../_components';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDeletedNewsViewModel } from './DeletedViewModel';
