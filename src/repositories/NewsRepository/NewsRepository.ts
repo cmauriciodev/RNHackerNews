@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
 import { hackerNewsApi } from '../../api/hackerNewsApi';
 import { HackerNewsResponse, INews } from '../../model/interfaces';
 import { INewsRepository } from './news-repository.interface';
@@ -42,10 +41,15 @@ export class NewsRepository implements INewsRepository {
                         storyTitle: post.story_title,
                         author: post.author,
                         storyUrl: post.story_url,
-                        createdAt: moment(post.created_at).fromNow(),
+                        createdAt: post.created_at,
                         objectID: post.objectID,
                     };
                 });
+
+            await AsyncStorage.setItem(
+                NEWS_STORAGE_KEY,
+                JSON.stringify(responseData),
+            );
 
             return responseData;
         } catch (error) {
@@ -59,7 +63,7 @@ export class NewsRepository implements INewsRepository {
                     ),
             );
 
-            return JSON.parse(filteredNews || '[]') as INews[];
+            return filteredNews;
         }
     }
 
@@ -69,7 +73,13 @@ export class NewsRepository implements INewsRepository {
      */
     async getDeletedNews(): Promise<INews[]> {
         const data = await AsyncStorage.getItem(DELETED_NEWS_STORAGE_KEY);
-        return JSON.parse(data || '[]') as INews[];
+        const sortedData: INews[] = JSON.parse(data || '[]').sort(
+            (a: INews, b: INews) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+        );
+
+        return sortedData;
     }
 
     /**

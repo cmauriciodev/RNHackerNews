@@ -1,9 +1,9 @@
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useDeletedNewsViewModel } from '../hooks';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
+import { useDeletedNewsViewModel } from '../ViewModels';
 
 export const DeletedScreen = () => {
     const { deletedNews, loadDeletedNews, isLoading, restoreNews } =

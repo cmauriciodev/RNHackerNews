@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';
 import { useConnection } from '../hooks';
 import { Swipeable } from 'react-native-gesture-handler';
+import moment from 'moment';
 
 interface Props {
     item: INews;
@@ -69,7 +70,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
                     <Text style={styles.cardData}>{objectID}</Text>
                     <Text style={styles.cardTitle}>{storyTitle}</Text>
                     <Text style={styles.cardData}>
-                        {author} - {createdAt}
+                        {author} - {moment(createdAt).fromNow()}
                     </Text>
                 </Animated.View>
             </Pressable>

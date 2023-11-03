@@ -5,7 +5,7 @@ import { INews } from '../model/interfaces';
 export const useNewsViewModel = () => {
     const newsRepository = new NewsRepository();
     const [news, setNews] = useState<INews[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const loadNews = async () => {
         setIsLoading(true);

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FlatList, RefreshControl, SafeAreaView } from 'react-native';
+import { Alert, FlatList, RefreshControl, SafeAreaView } from 'react-native';
 import { ListItem } from '../components';
-import { useConnection, useNewsViewModel } from '../hooks';
+import { useConnection } from '../hooks';
 import { useFocusEffect } from '@react-navigation/native';
+import { useNewsViewModel } from '../ViewModels';
 
 export const HomeScreen = () => {
     const { news, loadNews, isLoading, deleteNews } = useNewsViewModel();
@@ -16,7 +17,10 @@ export const HomeScreen = () => {
 
     const onRefresh = () => {
         if (!isConnected) {
-            return;
+            Alert.alert(
+                'No internet connection',
+                'Cannot update news without internet connection',
+            );
         }
         loadNews();
     };
