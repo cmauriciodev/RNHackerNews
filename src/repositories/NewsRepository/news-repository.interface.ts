@@ -1,4 +1,4 @@
-import { INews } from '../../interfaces';
+import { INews } from '../../model/interfaces';
 
 export interface INewsRepository {
     getNews(): Promise<INews[]>;

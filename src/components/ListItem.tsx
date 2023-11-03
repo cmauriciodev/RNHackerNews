@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, Alert, Animated, Pressable } from 'react-native';
-import { INews } from '../interfaces';
+import { INews } from '../model/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NewsStackParams } from '../navigation/NewsNavigator';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NewsRepository } from '../repositories/NewsRepository';
-import { INews } from '../interfaces';
+import { INews } from '../model/interfaces';
 
 export const useDeletedNewsViewModel = () => {
     const newsRepository = new NewsRepository();

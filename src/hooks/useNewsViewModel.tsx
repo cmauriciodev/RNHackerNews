@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NewsRepository } from '../repositories/NewsRepository';
-import { INews } from '../interfaces';
+import { INews } from '../model/interfaces';
 
 export const useNewsViewModel = () => {
     const newsRepository = new NewsRepository();
