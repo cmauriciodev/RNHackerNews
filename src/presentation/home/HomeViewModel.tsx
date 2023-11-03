@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NewsRepository } from '../../data/news';
 import { INews } from '../../model/interfaces';
 
@@ -6,6 +6,10 @@ export const useNewsViewModel = () => {
     const newsRepository = new NewsRepository();
     const [news, setNews] = useState<INews[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        loadNews();
+    }, []);
 
     const loadNews = async () => {
         setIsLoading(true);

@@ -1,19 +1,12 @@
 import React from 'react';
 import { Alert, FlatList, RefreshControl, SafeAreaView } from 'react-native';
 import { ListItem } from '../_components';
-import { useConnection } from '../../hooks';
-import { useFocusEffect } from '@react-navigation/native';
+import { useConnection } from '../../utils/hooks';
 import { useNewsViewModel } from './HomeViewModel';
 
 export const HomeScreen = () => {
     const { news, loadNews, isLoading, deleteNews } = useNewsViewModel();
     const { isConnected } = useConnection();
-
-    useFocusEffect(
-        React.useCallback(() => {
-            loadNews();
-        }, []),
-    );
 
     const onRefresh = () => {
         if (!isConnected) {

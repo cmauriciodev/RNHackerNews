@@ -1,4 +1,4 @@
-import { hackerNewsApi } from '../../../api/hackerNewsApi';
+import { hackerNewsApi } from '../../../utils/api/hackerNewsApi';
 import { HackerNewsResponse } from '../../../model/interfaces';
 
 export interface INewsRemoteDataSource {

@@ -1,24 +1,24 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { DeletedScreen } from '../presentation/deleted';
-import { ArticleScreen } from '../presentation/article';
+import { HomeScreen } from '../home';
+import { ArticleScreen } from '../article';
 
-export type DeletedStackParams = {
-    DeletedScreen: undefined;
+export type NewsStackParams = {
+    HomeScreen: undefined;
     ArticleScreen: { url: string; storyTitle: string };
 };
 
-const Stack = createStackNavigator<DeletedStackParams>();
+const Stack = createStackNavigator<NewsStackParams>();
 
-export const DeletedNavigator = () => {
+export const NewsNavigator = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
                 options={{
                     headerShown: false,
                 }}
-                name="DeletedScreen"
-                component={DeletedScreen}
+                name="HomeScreen"
+                component={HomeScreen}
             />
             <Stack.Screen
                 options={{

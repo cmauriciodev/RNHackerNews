@@ -1,6 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { INews } from '../../model/interfaces';
-import { DELETED_NEWS_STORAGE_KEY } from '../../model/constants';
 import {
     INewsRemoteDataSource,
     NewsRemoteDataSource,
