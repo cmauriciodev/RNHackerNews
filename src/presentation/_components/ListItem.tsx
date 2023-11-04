@@ -67,7 +67,7 @@ export const ListItem = ({ onSwipe, item, swipeOptions }: Props) => {
             renderRightActions={renderRightAction}>
             <Pressable onPress={onNavigateToNewArticle}>
                 <Animated.View style={styles.cardContainer}>
-                    <Text style={styles.cardData}>{objectID}</Text>
+                    <Text style={styles.cardId}>{objectID}</Text>
                     <Text style={styles.cardTitle}>{storyTitle}</Text>
                     <Text style={styles.cardData}>
                         {author} - {moment(createdAt).fromNow()}
@@ -94,6 +94,11 @@ const styles = StyleSheet.create({
     },
     cardData: {
         fontSize: 14,
+        color: 'grey',
+        marginTop: 5,
+    },
+    cardId: {
+        fontSize: 12,
         color: 'grey',
         marginTop: 5,
     },
