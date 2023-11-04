@@ -6,6 +6,10 @@ export interface INewsRemoteDataSource {
 }
 
 export class NewsRemoteDataSource implements INewsRemoteDataSource {
+    /**
+     * Fetches news from the Hacker News API.
+     * @returns A Promise that resolves to the response data from the API.
+     */
     async getNews() {
         const response = await hackerNewsApi.get<HackerNewsResponse>(
             '/search_by_date?query=mobile',

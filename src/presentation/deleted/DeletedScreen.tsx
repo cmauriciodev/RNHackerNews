@@ -1,12 +1,11 @@
 import React from 'react';
-import { FlatList, SafeAreaView } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native';
 import { ListItem } from '../_components';
-import { RefreshControl } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDeletedNewsViewModel } from './DeletedViewModel';
 
 export const DeletedScreen = () => {
-    const { deletedNews, loadDeletedNews, isLoading, restoreNews } =
+    const { deletedNews, loadDeletedNews, restoreNews } =
         useDeletedNewsViewModel();
 
     useFocusEffect(
@@ -16,31 +15,40 @@ export const DeletedScreen = () => {
     );
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                data={deletedNews}
-                keyExtractor={post => post.objectID}
-                renderItem={({ item, index }) => (
-                    <ListItem
-                        key={index}
-                        onSwipe={restoreNews}
-                        item={item}
-                        swipeOptions={{
-                            color: 'green',
-                            text: 'Restore',
-                        }}
-                    />
-                )}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={isLoading}
-                        onRefresh={loadDeletedNews}
-                        progressViewOffset={10}
-                        title="Getting posts..."
-                    />
-                }
-            />
+        <SafeAreaView style={styles.container}>
+            {deletedNews.length === 0 ? (
+                <Text style={styles.noNewsLabel}>No deleted news</Text>
+            ) : (
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={deletedNews}
+                    keyExtractor={post => post.objectID}
+                    renderItem={({ item, index }) => (
+                        <ListItem
+                            key={index}
+                            onSwipe={restoreNews}
+                            item={item}
+                            swipeOptions={{
+                                color: 'green',
+                                text: 'Restore',
+                            }}
+                        />
+                    )}
+                />
+            )}
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#fff',
+        flex: 1,
+    },
+    noNewsLabel: {
+        alignSelf: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 20,
+    },
+});

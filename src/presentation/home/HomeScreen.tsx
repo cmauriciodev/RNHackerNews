@@ -1,5 +1,11 @@
 import React from 'react';
-import { Alert, FlatList, RefreshControl, SafeAreaView } from 'react-native';
+import {
+    Alert,
+    FlatList,
+    RefreshControl,
+    SafeAreaView,
+    StyleSheet,
+} from 'react-native';
 import { ListItem } from '../_components';
 import { useConnection } from '../../utils/hooks';
 import { useNewsViewModel } from './HomeViewModel';
@@ -19,7 +25,7 @@ export const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={news}
@@ -47,3 +53,11 @@ export const HomeScreen = () => {
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#fff',
+        flex: 1,
+        alignItems: 'center',
+    },
+});
